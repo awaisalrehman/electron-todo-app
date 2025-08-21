@@ -1,7 +1,17 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron';
 
-const api = {
-  getTodos: () => ipcRenderer.invoke('get-todos')
+interface Api {
+  apiRequest: <T = unknown, R = unknown>(
+    route: string,
+    method: string,
+    data?: T
+  ) => Promise<R>;
 }
 
-contextBridge.exposeInMainWorld('api', api)
+const api: Api = {
+  apiRequest: async <T, R>(route: string, method: string, data?: T): Promise<R> => {
+    return ipcRenderer.invoke('api-request', { route, method, data });
+  },
+};
+
+contextBridge.exposeInMainWorld('api', api);
