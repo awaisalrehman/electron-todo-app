@@ -8,15 +8,18 @@ import { WebpackPlugin } from '@electron-forge/plugin-webpack';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
 
-import { mainConfig } from './webpack.main.config';
-import { rendererConfig } from './webpack.renderer.config';
+import { mainConfig } from './webpack/webpack.main.config';
+import { rendererConfig } from './webpack/webpack.renderer.config';
 
 const config: ForgeConfig = {
-  packagerConfig: {
-    asar: true,
-  },
+  packagerConfig: { asar: true },
   rebuildConfig: {},
-  makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
+  makers: [
+    new MakerSquirrel({}),
+    new MakerZIP({}, ['darwin']),
+    new MakerRpm({}),
+    new MakerDeb({}),
+  ],
   plugins: [
     new AutoUnpackNativesPlugin({}),
     new WebpackPlugin({
@@ -28,15 +31,11 @@ const config: ForgeConfig = {
             html: './src/renderer/index.html',
             js: './src/renderer/src/main.tsx',
             name: 'main_window',
-            preload: {
-              js: './src/preload/index.ts',
-            },
+            preload: { js: './src/preload/index.ts' },
           },
         ],
       },
     }),
-    // Fuses are used to enable/disable various Electron functionality
-    // at package time, before code signing the application
     new FusesPlugin({
       version: FuseVersion.V1,
       [FuseV1Options.RunAsNode]: false,
