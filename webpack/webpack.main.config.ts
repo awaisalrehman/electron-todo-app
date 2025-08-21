@@ -3,7 +3,7 @@ import { rules } from './webpack.rules';
 import { plugins } from './webpack.plugins';
 
 export const mainConfig: Configuration = {
-  entry: './src/main/index.ts',
+  entry: './src/main/electron/index.ts',
   module: { rules },
   plugins,
   resolve: {

@@ -1,17 +1,10 @@
-import { contextBridge, ipcRenderer } from 'electron';
-
-interface Api {
-  apiRequest: <T = unknown, R = unknown>(
-    route: string,
-    method: string,
-    data?: T
-  ) => Promise<R>;
-}
+import { contextBridge, ipcRenderer } from "electron";
+import type { Api } from "../types/global";
 
 const api: Api = {
-  apiRequest: async <T, R>(route: string, method: string, data?: T): Promise<R> => {
-    return ipcRenderer.invoke('api-request', { route, method, data });
+  apiRequest: async (route, method, data) => {
+    return ipcRenderer.invoke("api-request", route, method, data);
   },
 };
 
-contextBridge.exposeInMainWorld('api', api);
+contextBridge.exposeInMainWorld("api", api);

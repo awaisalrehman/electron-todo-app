@@ -1,15 +1,8 @@
 import { useState, useEffect } from 'react';
-import { LoginInput, RegisterInput } from '../../shared/schemas/auth';
-import { User } from '@prisma/client';
-
-interface AuthResponse {
-  success: boolean;
-  user?: Pick<User, 'id' | 'email'>;
-  error?: string;
-}
+import type { AuthUser, RegisterInput, LoginInput, LoginResponse, RegisterResponse, VerifyResponse } from '../../types/auth';
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,18 +12,17 @@ export const useAuth = () => {
       try {
         const savedUser = localStorage.getItem('user');
         if (savedUser) {
-          const userData = JSON.parse(savedUser);
-          
-          // Verify the session is still valid
-          const response = await window.api.apiRequest<AuthResponse>('/api/auth/verify', 'GET');
-          if (response.success) {
+          const userData: AuthUser = JSON.parse(savedUser);
+
+          // Verify session
+          const response = await window.api.apiRequest<undefined, VerifyResponse>('/api/auth/verify', 'GET');
+          if (response.success && response.user) {
             setUser(userData);
           } else {
             localStorage.removeItem('user');
           }
         }
-      } catch (err) {
-        console.error('Auth check failed:', err);
+      } catch {
         localStorage.removeItem('user');
       } finally {
         setLoading(false);
@@ -44,18 +36,21 @@ export const useAuth = () => {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await window.api.apiRequest<AuthResponse>('/api/auth/login', 'POST', credentials);
-      
+
+      const response = await window.api.apiRequest<LoginInput, LoginResponse>(
+        '/api/auth/login',
+        'POST',
+        credentials
+      );
+
       if (response.success && response.user) {
-        setUser(response.user as User);
+        setUser(response.user);
         localStorage.setItem('user', JSON.stringify(response.user));
         return { success: true };
       } else {
-        setError(response.error ?? 'Login failed');
-        return { success: false, error: response.error };
+        return { success: false, error: (response as any).error ?? 'Login failed' };
       }
-    } catch (err) {
+    } catch {
       const errorMessage = 'Login failed. Please try again.';
       setError(errorMessage);
       return { success: false, error: errorMessage };
@@ -68,18 +63,21 @@ export const useAuth = () => {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await window.api.apiRequest<AuthResponse>('/api/auth/register', 'POST', userData);
-      
+
+      const response = await window.api.apiRequest<RegisterInput, RegisterResponse>(
+        '/api/auth/register',
+        'POST',
+        userData
+      );
+
       if (response.success && response.user) {
-        setUser(response.user as User);
+        setUser(response.user);
         localStorage.setItem('user', JSON.stringify(response.user));
         return { success: true };
       } else {
-        setError(response.error ?? 'Registration failed');
-        return { success: false, error: response.error };
+        return { success: false, error: (response as any).error ?? 'Registration failed' };
       }
-    } catch (err) {
+    } catch {
       const errorMessage = 'Registration failed. Please try again.';
       setError(errorMessage);
       return { success: false, error: errorMessage };
@@ -91,9 +89,7 @@ export const useAuth = () => {
   const logout = async () => {
     try {
       setLoading(true);
-      await window.api.apiRequest('/api/auth/logout', 'POST');
-    } catch (err) {
-      console.error('Logout error:', err);
+      await window.api.apiRequest<undefined, { success: true }>('/api/auth/logout', 'POST');
     } finally {
       setUser(null);
       localStorage.removeItem('user');
@@ -101,9 +97,7 @@ export const useAuth = () => {
     }
   };
 
-  const clearError = () => {
-    setError(null);
-  };
+  const clearError = () => setError(null);
 
   return {
     user,

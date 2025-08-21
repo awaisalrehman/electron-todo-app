@@ -5,7 +5,7 @@ import { authController } from './controllers/authController';
 import { errorHandler } from './middleware/errorHandler';
 import { requestLogger } from './middleware/requestLogger';
 import { validateRequest } from './middleware/validateRequest';
-import { RegisterSchema, LoginSchema } from '../shared/schemas/auth'
+import { RegisterSchema, LoginSchema } from '../../schemas/auth'
 import { asyncHandler } from './utils/asyncHandler';
 
 export class Server {
