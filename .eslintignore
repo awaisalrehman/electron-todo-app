@@ -1,0 +1,8 @@
+# Ignore build outputs
+dist
+node_modules
+
+# Ignore config files that aren't TS
+postcss.config.mjs
+webpack/*.js
+webpack/*.mjs
