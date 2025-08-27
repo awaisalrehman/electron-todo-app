@@ -1,4 +1,3 @@
-// src/main/types/express-session.d.ts
 import { User } from '@prisma/client';
 import "express-session";
 

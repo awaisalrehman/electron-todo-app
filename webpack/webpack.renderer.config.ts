@@ -1,6 +1,8 @@
 import type { Configuration } from 'webpack';
+import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 import { rules } from './webpack.rules';
 import { plugins } from './webpack.plugins';
+import path from 'path';
 
 // Extend rules for CSS
 const rendererRules = [
@@ -16,6 +18,12 @@ export const rendererConfig: Configuration = {
   module: { rules: rendererRules },
   plugins,
   resolve: {
-    extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
+    extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
+    plugins: [
+      new TsconfigPathsPlugin({
+        configFile: path.resolve(__dirname, '../tsconfig.json'),
+        extensions: ['.js', '.ts', '.jsx', '.tsx'],
+      }),
+    ],
   },
 };

@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import { PrismaClient } from '@prisma/client';
-import { RegisterInput, LoginInput } from '../../../types/auth'
-import { AppError } from '../middleware/errorHandler';
+import { AppError } from '@server/middleware/errorHandler';
 
 const prisma = new PrismaClient();
 

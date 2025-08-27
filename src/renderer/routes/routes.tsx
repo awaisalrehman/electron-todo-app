@@ -1,6 +1,6 @@
-import TodoList from "../pages/TodoList";
-import Register from "../pages/Register";
-import Login from "../pages/Login";
+import TodoList from "@renderer/pages/TodoList";
+import Register from "@renderer/pages/Register";
+import Login from "@renderer/pages/Login";
 
 // Authenticated routes
 export const privateRoutes = [

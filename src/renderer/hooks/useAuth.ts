@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import type { AuthUser, RegisterInput, LoginInput, LoginResponse, RegisterResponse, VerifyResponse } from '../../types/auth';
 
 export const useAuth = () => {
   const [user, setUser] = useState<AuthUser | null>(null);

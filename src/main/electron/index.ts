@@ -2,7 +2,7 @@ import { app } from "electron";
 import { createMainWindow } from "./window";
 import { registerAppEvents } from "./appEvents";
 import { registerIpcHandlers } from "./ipcHandlers";
-import { Server } from "../server/server";
+import { Server } from "@server/server";
 
 if (require("electron-squirrel-startup")) {
   app.quit();

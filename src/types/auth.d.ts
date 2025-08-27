@@ -1,31 +1,35 @@
 import { z } from 'zod';
 import type { User } from "@prisma/client";
-import { LoginSchema, RegisterSchema } from '../schemas/auth';
+import { LoginSchema, RegisterSchema } from '@src/schemas/auth';
 
-// Safe user type (no password)
-export type AuthUser = Omit<User, "password">;
-
-// Requests
-export type LoginInput = z.infer<typeof LoginSchema>;
-export type RegisterInput = z.infer<typeof RegisterSchema>;
-
-// Responses
-export interface RegisterResponse {
-  success: true;
-  user: AuthUser;
+declare global {
+  // Safe user type (no password)
+  type AuthUser = Omit<User, "password">;
+  
+  // Requests
+  type LoginInput = z.infer<typeof LoginSchema>;
+  type RegisterInput = z.infer<typeof RegisterSchema>;
+  
+  // Responses
+  interface RegisterResponse {
+    success: true;
+    user: AuthUser;
+  }
+  
+  interface LoginResponse {
+    success: true;
+    user: AuthUser;
+  }
+  
+  interface LogoutResponse {
+    success: true;
+  }
+  
+  interface VerifyResponse {
+    success: boolean;
+    user?: AuthUser;
+    error?: string;
+  }
 }
 
-export interface LoginResponse {
-  success: true;
-  user: AuthUser;
-}
-
-export interface LogoutResponse {
-  success: true;
-}
-
-export interface VerifyResponse {
-  success: boolean;
-  user?: AuthUser;
-  error?: string;
-}
+export {};

@@ -12,12 +12,14 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "paths": {
-      "*": ["node_modules/*"]
+      "*": ["node_modules/*"],
+      "@/*": ["./*"],
+      "@src/*": ["src/*"],
+      "@main/*": ["src/main/electron/*"],
+      "@server/*": ["src/main/server/*"],
+      "@renderer/*": ["src/renderer/*"]
     },
     "jsx": "react-jsx",
   },
-  "include": ["src/**/*"],
-  "files": [
-    "./src/types/global.d.ts"
-  ]
+  "include": ["src/**/*"]
 }

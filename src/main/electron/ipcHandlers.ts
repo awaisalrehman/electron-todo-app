@@ -1,5 +1,4 @@
 import { ipcMain } from "electron";
-import type { Api } from "../../types/global";
 
 type ApiRequestArgs = Parameters<Api["apiRequest"]>; 
 // => [route: string, method: HttpMethod, data?: unknown]
