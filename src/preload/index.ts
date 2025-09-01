@@ -6,4 +6,14 @@ const api: Api = {
   },
 };
 
+const electronApi: ElectronAPI = {
+  onNavigate: (callback: (path: string) => void) => {
+    ipcRenderer.on('navigate-to', (_, path) => callback(path));
+  },
+  removeAllListeners: (channel: string) => {
+    ipcRenderer.removeAllListeners(channel);
+  }
+};
+
 contextBridge.exposeInMainWorld("api", api);
+contextBridge.exposeInMainWorld('electronAPI', electronApi);

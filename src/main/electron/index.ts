@@ -8,7 +8,7 @@ if (require("electron-squirrel-startup")) {
   app.quit();
 }
 
-let server: Server;
+let server: Server | undefined;
 
 app.whenReady().then(async () => {
   // Start backend server
@@ -21,4 +21,10 @@ app.whenReady().then(async () => {
   // Register IPC & app lifecycle events
   registerIpcHandlers();
   registerAppEvents();
+});
+
+app.on("before-quit", async () => {
+  if (server) {
+    await server.stop?.(); // ensure proper shutdown if implemented
+  }
 });

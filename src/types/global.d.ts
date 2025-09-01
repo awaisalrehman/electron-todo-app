@@ -9,8 +9,14 @@ declare global {
     ) => Promise<R>;
   }
 
+  interface ElectronAPI {
+    onNavigate: (callback: (path: string) => void) => void;
+    removeAllListeners: (channel: string) => void;
+  }
+
   interface Window {
     api: Api;
+    electronAPI: ElectronAPI;
   }
 }
 
